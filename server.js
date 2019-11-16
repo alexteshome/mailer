@@ -3,6 +3,8 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const app = express();
 const cors = require("cors");
+const schema = require("./validation");
+const Joi = require("@hapi/joi");
 
 app.use(bodyParser.json());
 app.use(
@@ -28,6 +30,13 @@ app.post("/send", (req, res, next) => {
   var email = req.body.email;
   var message = req.body.message;
   var content = `Name: ${name} \n\n Email: ${email} \n\n Message: \n\n ${message} `;
+
+  const result = schema.validate({ name, email, message });
+
+  if (result.error) {
+    console.log(result);
+    return res.status(400).json({ message: result.error });
+  }
 
   let transporter = nodemailer.createTransport({
     service: creds.service,
