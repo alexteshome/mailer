@@ -27,7 +27,7 @@ app.post("/send", (req, res, next) => {
   var name = req.body.name;
   var email = req.body.email;
   var message = req.body.message;
-  var content = `name: ${name} \n email: ${email} \n message: ${message} `;
+  var content = `Name: ${name} \n\n Email: ${email} \n\n Message: \n\n ${message} `;
 
   let transporter = nodemailer.createTransport({
     service: creds.service,
@@ -48,7 +48,7 @@ app.post("/send", (req, res, next) => {
   var mail = {
     from: email,
     to: "chikamailer@gmail.com", //Change to email address that you want to receive messages on
-    subject: "New Message from Contact Form",
+    subject: "New message from cmbconsulting.ca/contact",
     text: content
   };
 
