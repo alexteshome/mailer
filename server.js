@@ -35,7 +35,7 @@ app.post("/send", (req, res, next) => {
 
   if (result.error) {
     console.log(result);
-    return res.status(400).json({ message: result.error });
+    return res.status(400).json({ message: result.error.details[0].message });
   }
 
   let transporter = nodemailer.createTransport({
@@ -50,8 +50,9 @@ app.post("/send", (req, res, next) => {
   transporter.verify((error, success) => {
     if (error) {
       console.log(error);
-    } else {
-      console.log("Server is ready to take messages");
+      return res.json({
+        message: "fail"
+      });
     }
   });
   var mail = {
