@@ -1,9 +1,7 @@
 const Joi = require("@hapi/joi");
 
 module.exports = schema = Joi.object().keys({
-  name: Joi.string()
-    .alphanum()
-    .required(),
+  name: Joi.string().required(),
   email: Joi.string()
     .email()
     .required(),
