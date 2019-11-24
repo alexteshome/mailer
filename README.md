@@ -1,2 +1,2 @@
-# Back-end server for e-mailing
+# Back-end Node server for e-mailing
 ## Used for the contact form in https://github.com/alexteshome/chika-mba-consulting-inc
