@@ -43,8 +43,8 @@ app.post("/send", (req, res, next) => {
     service: creds.service,
     tls: true,
     auth: {
-      user: creds.user, // generated ethereal user
-      pass: creds.password // generated ethereal password
+      user: creds.user,
+      pass: creds.password
     }
   });
 
@@ -58,7 +58,7 @@ app.post("/send", (req, res, next) => {
   });
   const mail = {
     from: email,
-    to: "info@cmbaconsulting.ca", //Change to email address that you want to receive messages on
+    to: "info@cmbaconsulting.ca",
     subject: "New message from Chika Mba Consulting Inc contact form",
     text: content
   };
