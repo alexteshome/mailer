@@ -3,8 +3,9 @@ const bodyParser = require("body-parser");
 const nodemailer = require("nodemailer");
 const app = express();
 const cors = require("cors");
-const schema = require("./validation");
+const schemaJoi = require("./validation");
 const Joi = require("@hapi/joi");
+const graphql = require("./controller/graphqlController");
 
 app.use(bodyParser.json());
 app.use(
@@ -25,13 +26,13 @@ app.use(function(req, res, next) {
 });
 
 app.post("/send", (req, res, next) => {
-  var creds = req.body.creds;
-  var name = req.body.name;
-  var email = req.body.email;
-  var message = req.body.message;
-  var content = `Name: ${name} \n\n Email: ${email} \n\n Message: \n\n ${message} `;
+  const creds = req.body.creds;
+  const name = req.body.name;
+  const email = req.body.email;
+  const message = req.body.message;
+  const content = `Name: ${name} \n\n Email: ${email} \n\n Message: \n\n ${message} `;
 
-  const result = schema.validate({ name, email, message });
+  const result = schemaJoi.validate({ name, email, message });
 
   if (result.error) {
     console.log(result);
@@ -51,11 +52,11 @@ app.post("/send", (req, res, next) => {
     if (error) {
       console.log(error);
       return res.json({
-        message: "fail"
+        message: error
       });
     }
   });
-  var mail = {
+  const mail = {
     from: email,
     to: "info@cmbaconsulting.ca", //Change to email address that you want to receive messages on
     subject: "New message from Chika Mba Consulting Inc contact form",
@@ -77,6 +78,9 @@ app.post("/send", (req, res, next) => {
 
 const PORT = process.env.PORT || 3001;
 app.use(cors());
+
+app.use("/graphql", graphql);
+
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
 });
