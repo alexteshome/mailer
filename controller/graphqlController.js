@@ -65,7 +65,7 @@ const sendMail = async input => {
   });
   const mail = {
     from: email,
-    to: "info@cmbaconsulting.ca", //Change to email address that you want to receive messages on
+    to: "chikamailer@gmail.com", //Change to email address that you want to receive messages on
     subject: "New message from Chika Mba Consulting Inc contact form",
     text: content
   };
