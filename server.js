@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const nodemailer = require("nodemailer");
 const app = express();
 const cors = require("cors");
+const sgMail = require("@sendgrid/mail");
 const schemaJoi = require("./validation");
 const Joi = require("@hapi/joi");
 const graphql = require("./controller/graphqlController");
@@ -15,7 +15,7 @@ app.use(
 );
 
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Origin", "https://cmbaconsulting.ca");
   res.header("Access-Control-Allow-Credentials", true);
   res.header("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,OPTIONS");
   res.header(
@@ -32,47 +32,33 @@ app.post("/send", (req, res, next) => {
   const content = `Name: ${name} \n\n Email: ${email} \n\n Message: \n\n ${message} `;
 
   const result = schemaJoi.validate({ name, email, message });
-
   if (result.error) {
     console.log(result);
     return res.status(400).json({ message: result.error.details[0].message });
   }
 
-  let transporter = nodemailer.createTransport({
-    service: "Gmail",
-    tls: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASSWORD
-    }
-  });
-
-  transporter.verify((error, success) => {
-    if (error) {
-      console.log(error);
-      return res.json({
-        message: error
-      });
-    }
-  });
-  const mail = {
+  sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+  const msg = {
     from: email,
     to: "info@cmbaconsulting.ca",
-    subject: "New message from Chika Mba Consulting Inc contact form",
+    subject: name + " messaged you through Chika Mba Consulting Inc",
     text: content
   };
 
-  transporter.sendMail(mail, (err, data) => {
-    if (err) {
-      res.json({
-        message: "fail"
-      });
-    } else {
+  sgMail
+    .send(msg)
+    .then(data => {
+      console.log(data);
       res.json({
         message: "success"
       });
-    }
-  });
+    })
+    .catch(err => {
+      console.log(err);
+      res.json({
+        message: "fail"
+      });
+    });
 });
 
 const PORT = process.env.PORT || 3001;
