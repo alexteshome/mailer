@@ -26,7 +26,6 @@ app.use(function(req, res, next) {
 });
 
 app.post("/send", (req, res, next) => {
-  const creds = req.body.creds;
   const name = req.body.name;
   const email = req.body.email;
   const message = req.body.message;
@@ -40,11 +39,11 @@ app.post("/send", (req, res, next) => {
   }
 
   let transporter = nodemailer.createTransport({
-    service: creds.service,
+    service: "Gmail",
     tls: true,
     auth: {
-      user: creds.user,
-      pass: creds.password
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
     }
   });
 
